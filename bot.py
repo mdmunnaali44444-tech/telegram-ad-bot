@@ -1,12 +1,9 @@
-TEXT & import logging
+import logging
+import os
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
-# এখানে তোমার BotFather থেকে পাওয়া Token বসাবে
-BOT_TOKEN = 8855630337:AAE11zgym6upYZWZg6ry2hUmKgKQhq6bbro
-
-# তোমার এডের চ্যানেল / গ্রুপ ID, যেখানে এড যাবে
-# যেমন: -1001234567890
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
 AD_CHANNEL_ID = "@bdearnig3090"
 
 logging.basicConfig(level=logging.INFO)
@@ -16,27 +13,29 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "হাই! আমি তোমার এড বট।\n\n"
         "কমান্ড:\n"
         "/ad - নতুন এড পোস্ট করতে\n"
-        "যেকোনো মেসেজ পাঠালে আমি সেটা চ্যানেলে পোস্ট করে দেবো"
+        "যেকোনো মেসেজ পাঠালে আমি সেটা চ্যানেলে পাঠাবো"
     )
 
 async def ad_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # /ad এর পরের লেখাটাই এড হিসেবে যাবে
-    ad_text = ' '.join(context.args)
-    if not ad_text:
-        await update.message.reply_text("এভাবে লিখো: /ad তোমার এডের লেখা")
-        return
-    
-    # চ্যানেলে পোস্ট
-    await context.bot.send_message(chat_id=AD_CHANNEL_ID, text=f"📢 নতুন এড:\n\n{ad_text}")
-    await update.message.reply_text("✅ এড সফলভাবে চ্যানেলে পোস্ট হয়েছে!")
+    await update.message.reply_text("তোমার এড টি পাঠাও, আমি চ্যানেলে পোস্ট করে দিচ্ছি।")
 
-async def auto_forward(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # তুমি বটকে যা পাঠাবে সেটাই এড হিসেবে চ্যানেলে চলে যাবে
-    await context.bot.send_message(chat_id=AD_CHANNEL_ID, text=update.message.text)
-    await update.message.reply_text("✅ পাঠানো হয়েছে")
+async def forward_to_channel(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    try:
+        await context.bot.copy_message(
+            chat_id=AD_CHANNEL_ID,
+            from_chat_id=update.effective_chat.id,
+            message_id=update.message.message_id
+        )
+        await update.message.reply_text("✅ এড চ্যানেলে পোস্ট হয়েছে!")
+    except Exception as e:
+        await update.message.reply_text(f"Error: {e}")
 
 def main():
     app = Application.builder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("ad", ad_command))
-    app.add_handler(MessageHandler(filters..
+    app.add_handler(MessageHandler(filters.ALL, forward_to_channel))
+    app.run_polling()
+
+if __name__ == "__main__":
+    main()
