@@ -3,11 +3,11 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
 # এখানে তোমার BotFather থেকে পাওয়া Token বসাবে
-BOT_TOKEN = "PASTE_YOUR_TOKEN_HERE"
+BOT_TOKEN = 8855630337:AAE11zgym6upYZWZg6ry2hUmKgKQhq6bbro
 
 # তোমার এডের চ্যানেল / গ্রুপ ID, যেখানে এড যাবে
 # যেমন: -1001234567890
-AD_CHANNEL_ID = "@your_channel_username"
+AD_CHANNEL_ID = "@bdearnig3090"
 
 logging.basicConfig(level=logging.INFO)
 
