@@ -1,4 +1,4 @@
-import logging
+TEXT & import logging
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
@@ -39,9 +39,4 @@ def main():
     app = Application.builder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("ad", ad_command))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, auto_forward))
-    print("Bot is running...")
-    app.run_polling()
-
-if __name__ == "__main__":
-    main()
+    app.add_handler(MessageHandler(filters..
